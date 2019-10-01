@@ -20,6 +20,10 @@ finish_up() {
 }
 
 main() {
+    systemctl stop resin-supervisor
+    balena rm -f $(balena ps -a -q)
+    rm /mnt/data/apps.json || true
+    rm /mnt/data/resin-data/resin-supervisor/database.sqlite || true
     if ! systemctl restart resin-supervisor ; then
         echo "First restart attempt didn't work, trying with balenaEngine restart"
         systemctl stop resin-supervisor || finish_up "Couldn't stop supervisor."
